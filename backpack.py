@@ -9,87 +9,79 @@ import argparse
 from time import sleep
 import re
 
-def cli():
+def main():
     parser = argparse.ArgumentParser(description='Backpack, an easy way to backup a directory.')
-    parser.add_argument('path', help='Path to directory', metavar='<PATH>')
-    parser.add_argument('--encrypt', help='Encrypt the backup files \n requires --email', action='store_true')
-    parser.add_argument('-email', help='Encrypt for recipient GPG email',)
+    parser.add_argument('-p', help='Path to file or directory', metavar='<PATH>',
+                        required=True)
+    parser.add_argument('-d', help='Path to destination directory', metavar='<PATH>',
+                        required=True)
+    parser.add_argument('-e', help='GPG Email for encryption', metavar='<john@gmail.com>',
+                        required=True)
     args = parser.parse_args()
-    encrypt = args.encrypt ; path = args.path ; email = args.email
-    # After dir_backup cwd is changed to /backup/ created
-    #dir_backup(path)
-    #sleep(2)
-    if encrypt == True and email == None:
-        print('ERROR: --encrypt requires --email <EMAIL> ')
-        exit()
-        #dir_encrypt()
+    path = args.p ; dest = args.d ; email = args.e
+    backup(path, dest, email)
 
 
-def check_path(path):
-    if re.search('~', path):
-        path = os.path.expanduser(path)
+def full_path(p):
+    if re.search('~', p):
+        p = os.path.expanduser(p)
     else:
-        path = os.path.abspath(path)
-    return path
+        p = os.path.abspath(p)
+    return p
+
+def encrypt(z, e):
+    gpg = gnupg.GPG(gnupghome=os.path.expanduser('~/.gnupg'))
+    with open(z, mode='rb') as f:
+        # output = [file_name].gpg
+        status = gpg.encrypt_file(f, recipients=e, output=z+".gpg")
+        status_msg = f'{z}: {status.status}'
+        cprint(status_msg, 'green')
+
+def backup_dir(p, d):
+    # dest_name = name for backup directory
+    dest_name = p.split('/')[-1] + '-backup'
+    # create zip
+    z = shutil.make_archive(dest_name, 'zip')
+    # move zip from cwd to dest
+    os.rename(z, d+'/'+z)
+    # encrypt zip then delete it
+    os.chdir(d)
+    return z
 
 def backup(path, dest, email):
 
-    orig_dir = check_path(path)
+    # Expand ~/ or ensure absolute path
+    orig_dir = full_path(path)
+    dest = full_path(dest)
 
-    dest = check_path(dest)
+    # if orig_dir{path}; zip and backup to dest
+    # TODO: wrap if in try. Except = os.path.exists. Move else after except as catchall error
+    if os.path.isdir(orig_dir):
+        # TODO: check if backup zip already exists before z
+        #   overwrite = input('Selection [Y/N]: ')
+        #   if not overwrite.upper() in 'Y':
+        os.chdir(orig_dir)
 
-    # Check if path exists AND IS a directory
-    if os.path.exists(orig_dir) and os.path.isdir(orig_dir):
-        # New backup directory to be created
-        # TODO: Add check to see if exists! Dir must NOT exist
-        dir_name = path.split('/')[-1] + '-backup'
+        # backup(orig_dir, dest)
+        # dest_name = name for backup directory
+        z = backup_dir(orig_dir, dest)
+        # encrypt zip then delete it
+        os.chdir(dest)
+        encrypt(z, email)
+        print(f'SUCCESS! Backup File: {dest+"/"+z+".gpg"}')
+        os.remove(z)
 
-    # Check for existing (dir)-backup - ask to delete
-    # TODO: Add check for existing (dir)-backup.zip - ask to delete
-    dest_folder = str(dest + "/" + dir_name)
-    if os.path.exists(dest_folder) and os.path.isdir(dest_folder):
-        print('Detected existing backup. Delete and continue?')
-        overwrite = input('Selection [Y/N]: ')
-        if not overwrite.upper() in 'Y':
-            exit()
-        else:
-            shutil.rmtree(dest_folder)
+    elif os.path.exists(orig_dir):
+        dir_path = os.path.dirname(orig_dir)
+        fname = orig_dir.split('/')[-1]
+        ename = fname+'.gpg'
+        print(f'Encrypting and moving File: {fname}')
+        os.chdir(dir_path)
+        encrypt(fname, email)
+        os.rename(ename, dest+'/'+ename)
+        print(f'SUCCESS! Backup file: {dest+"/"+ename}')
+    else:
+        raise IOError(f'{orig_dir} Not Found! ')
 
-    os.mkdir(dest_folder)
-
-    # BEGIN FILE encryption
-    os.chdir(path)
-
-    # Location for the user's GPG settings
-    gpg = gnupg.GPG(gnupghome=os.path.expanduser('~/.gnupg'))
-    # Prepare file(s) in directory for encryption
-    files_dir = []
-    files = [f for f in os.listdir(".") if os.path.isfile(f)]
-    for f in files:
-        files_dir.append(f)
-    for x in files_dir:
-        with open(x, mode='rb') as f:
-            # output = [file_name].gpg
-            status = gpg.encrypt_file(f, recipients=email, output=x+".gpg")
-            status_msg = f'{x}: {status.status}'
-            cprint(status_msg, 'green')
-            # move output to destination folder
-            dfile = x+'.gpg'
-            efile = dest_folder+'/'+x+'.gpg'
-            os.rename(dfile, efile)
-
-
-    # Compress backup folder
-    os.chdir(dest)
-    # zip archive will be stored in dest
-    shutil.make_archive(dir_name, 'zip', root_dir=dir_name)
-    dest_archive = dest+'/'+dir_name+'.zip'
-    # delete uncompressed directory (dest_folder)
-    shutil.rmtree(dest_folder)
-    print(f'Successfully created {dest_archive}')
-
-if __name__ == "__main__":
-    path = '/Volumes/EXT/before'
-    dest = '/Volumes/EXT'
-    email = 'jessefogarty@tuta.io'
-    backup(path, dest, email)
+# launch cli if called
+main()
