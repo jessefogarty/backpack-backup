@@ -43,9 +43,9 @@ def backup(path, dest, email):
         # New backup directory to be created
         # TODO: Add check to see if exists! Dir must NOT exist
         dir_name = path.split('/')[-1] + '-backup'
-        print('path validated')
 
-    # Check if existing backup - ask to delete
+    # Check for existing (dir)-backup - ask to delete
+    # TODO: Add check for existing (dir)-backup.zip - ask to delete
     dest_folder = str(dest + "/" + dir_name)
     if os.path.exists(dest_folder) and os.path.isdir(dest_folder):
         print('Detected existing backup. Delete and continue?')
@@ -59,7 +59,6 @@ def backup(path, dest, email):
 
     # BEGIN FILE encryption
     os.chdir(path)
-
 
     # Location for the user's GPG settings
     gpg = gnupg.GPG(gnupghome=os.path.expanduser('~/.gnupg'))
@@ -77,9 +76,17 @@ def backup(path, dest, email):
             # move output to destination folder
             dfile = x+'.gpg'
             efile = dest_folder+'/'+x+'.gpg'
-            print(efile)
             os.rename(dfile, efile)
 
+
+    # Compress backup folder
+    os.chdir(dest)
+    # zip archive will be stored in dest
+    shutil.make_archive(dir_name, 'zip', root_dir=dir_name)
+    dest_archive = dest+'/'+dir_name+'.zip'
+    # delete uncompressed directory (dest_folder)
+    shutil.rmtree(dest_folder)
+    print(f'Successfully created {dest_archive}')
 
 if __name__ == "__main__":
     path = '/Volumes/EXT/before'
