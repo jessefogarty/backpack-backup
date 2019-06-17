@@ -6,11 +6,11 @@ from termcolor import cprint
 import getpass
 import argparse
 
-def dir_encrypt():
+def dir_encrypt(email):
     # TODO: location selection - where are the files located?
     '''
         Encrypt files in a directory for a recipient.
-            gpg_recv : str
+            email : str
                 - recipient email address used for gpg encryption.
             dloc : str
                 - path to directory containing unencrypted files.
@@ -18,7 +18,6 @@ def dir_encrypt():
                 - subdirectory storage for encrypted files.
     '''
     # Location for the user's GPG settings
-    gpg_recv = input('Enter recipient email address for encryption: ')
     gpg = gnupg.GPG(gnupghome=os.path.expanduser('~/.gnupg'))
     # Prepare file(s) in directory for encryption
     files_dir = []
@@ -37,7 +36,7 @@ def dir_encrypt():
     for x in files_dir:
         with open(x, mode='rb') as f:
             # output = files_dir[index(x)] to get file name + add suffix .gpg
-            status = gpg.encrypt_file(f, recipients=gpg_recv, output=x+".gpg")
+            status = gpg.encrypt_file(f, recipients=email, output=x+".gpg")
             status_msg = f'{x}: {status.status}'
             cprint(status_msg, 'green')
 

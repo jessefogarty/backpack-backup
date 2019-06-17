@@ -24,7 +24,7 @@ def dir_backup(path):
 
         # New backup directory to be created
         # TODO: Add check to see if exists! Dir must NOT exist
-        new_dir = os.path.join(orig_dir, 'backup')
+        new_dir = path.split('/')[-1] + '-backup'
 
         # Try to copy the dirtree entirely
         try:
@@ -34,6 +34,8 @@ def dir_backup(path):
 
         os.chdir(new_dir)
         new_files = os.listdir('.')
-        cprint(f' Successfully backed up: {orig_dir}! Details below. \n Backup directory: {new_dir} \n Backup Files: {new_files}', 'green')
+        cprint(f' Successfully backed up: {orig_dir}! Details below. \n Backup directory: {os.path.abspath(new_dir)} \n Backup Files: {new_files}', 'green')
+
+
     else:
         print(f'Cannot find directory: {orig_dir}')
