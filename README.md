@@ -20,7 +20,7 @@ $ SUCCESS! Backup file: /Volumes/EXT/before/tmp.txt.gpg
 ```
 ## Version
 * Version 1.5 (in development)
-* Version 1.0
+* **Version 1.0 (current)**
 
 ## Contact
 * e-mail: jessefogarty@tuta.io
