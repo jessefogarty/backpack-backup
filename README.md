@@ -1,6 +1,8 @@
 Backpack.py - Encrypted Backups Made Easy.
 ======
-**backpack.py** is a script used to make quick encrypted backups of a folder or directory.
+![](https://img.shields.io/pypi/pyversions/3.svg?style=flat-square)
+
+> **backpack.py** is a python3 script used to make quick encrypted backups of a folder or directory.
 
 Example usage as follows below:
 
@@ -18,6 +20,13 @@ $ Encrypting and moving File: tmp.txt
 $ tmp.txt: encryption ok
 $ SUCCESS! Backup file: /Volumes/EXT/before/tmp.txt.gpg
 ```
+
+## Requirements
+* todo
+* todo
+* todo
+* todo
+
 ## Version
 * Version 1.5 (in development)
 * **Version 1.0 (current)**
@@ -26,4 +35,4 @@ $ SUCCESS! Backup file: /Volumes/EXT/before/tmp.txt.gpg
 * e-mail: jessefogarty@tuta.io
 * Twitter: [@twitterhandle](https://twitter.com/jessefogarty "twitterhandle on twitter")
 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=username&url=https://github.com/username/sw-name&title=sw-name&language=&tags=github&category=software)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=jessefogarty&url=https://github.com/jessefogarty/sw-name&title=sw-name&language=&tags=github&category=software)
