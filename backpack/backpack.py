@@ -8,6 +8,7 @@ import shutil
 import argparse
 from time import sleep
 import re
+from logger import Logger
 
 def main():
     parser = argparse.ArgumentParser(description='Backpack, an easy way to backup a directory.')
