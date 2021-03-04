@@ -10,44 +10,78 @@ from time import sleep
 import re
 from logger import Logger
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Backpack, an easy way to backup a directory.')
-    parser.add_argument('-p', help='Path to file or directory', metavar='<PATH>',
-                        required=True)
-    parser.add_argument('-d', help='Path to destination directory', metavar='<PATH>',
-                        required=True)
-    parser.add_argument('-e', help='GPG Email for encryption', metavar='<john@gmail.com>',
-                        required=True)
+    parser = argparse.ArgumentParser(
+        description="Backpack, an easy way to backup a directory."
+    )
+    parser.add_argument(
+        "-p", help="Path to file or directory", metavar="<PATH>", required=True
+    )
+    parser.add_argument(
+        "-d", help="Path to destination directory", metavar="<PATH>", required=True
+    )
+    parser.add_argument(
+        "-e", help="GPG Email for encryption", metavar="<john@gmail.com>", required=True
+    )
     args = parser.parse_args()
-    path = args.p ; dest = args.d ; email = args.e
+    path = args.p
+    dest = args.d
+    email = args.e
     backup(path, dest, email)
 
 
 def full_path(p):
-    if re.search('~', p):
+    """Expand a relative path and return the absolute path.
+
+    Args:
+        p (str): the relative path to a file.
+    Returns:
+        p (str): the absolute path to a file
+    """
+    if re.search("~", p):
         p = os.path.expanduser(p)
     else:
         p = os.path.abspath(p)
     return p
 
+
 def encrypt(z, e):
-    gpg = gnupg.GPG(gnupghome=os.path.expanduser('~/.gnupg'))
-    with open(z, mode='rb') as f:
+    """Encrypts an archive file for a specifid recipient using GPG.
+
+    Args:
+        z (str): absolute path to zip archive file you want to encrypt.
+    Returns:
+        e (str): absolute path to encrypted zip archive file (.zip.gpg).
+    """
+    gpg = gnupg.GPG(gnupghome=os.path.expanduser("~/.gnupg"))
+    with open(z, mode="rb") as f:
         # output = [file_name].gpg
-        status = gpg.encrypt_file(f, recipients=e, output=z+".gpg")
-        status_msg = f'{z}: {status.status}'
-        cprint(status_msg, 'green')
+        status = gpg.encrypt_file(f, recipients=e, output=z + ".gpg")
+        status_msg = f"{z}: {status.status}"
+        cprint(status_msg, "green")
+
 
 def backup_dir(p, d):
+    """Create a zipped copy of a directory.
+
+    Args:
+        p (str): full path to file or directory to backup.
+        d (str): full path to the destination for the backup archive file.
+    Returns:
+        # TODO: double check if this is a str or shutil object.
+        z (str): full path to backup archive OR archive object.
+    """
     # dest_name = name for backup directory
-    dest_name = p.split('/')[-1] + '-backup'
+    dest_name = p.split("/")[-1] + "-backup"
     # create zip
-    z = shutil.make_archive(dest_name, 'zip')
+    z = shutil.make_archive(dest_name, "zip")
     # move zip from cwd to dest
-    os.rename(z, d+'/'+z)
+    os.rename(z, d + "/" + z)
     # encrypt zip then delete it
     os.chdir(d)
     return z
+
 
 def backup(path, dest, email):
 
@@ -74,15 +108,16 @@ def backup(path, dest, email):
 
     elif os.path.exists(orig_dir):
         dir_path = os.path.dirname(orig_dir)
-        fname = orig_dir.split('/')[-1]
-        ename = fname+'.gpg'
-        print(f'Encrypting and moving File: {fname}')
+        fname = orig_dir.split("/")[-1]
+        ename = fname + ".gpg"
+        print(f"Encrypting and moving File: {fname}")
         os.chdir(dir_path)
         encrypt(fname, email)
-        os.rename(ename, dest+'/'+ename)
+        os.rename(ename, dest + "/" + ename)
         print(f'SUCCESS! Backup file: {dest+"/"+ename}')
     else:
-        raise IOError(f'{orig_dir} Not Found! ')
+        raise IOError(f"{orig_dir} Not Found! ")
+
 
 # launch cli if called
 main()
