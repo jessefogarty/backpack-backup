@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+""" A program that will encrypt and archive a file or directory.
+"""
+from _typeshed import NoneType
 import os
 from distutils.dir_util import copy_tree
 from termcolor import cprint
@@ -9,9 +11,11 @@ import argparse
 from time import sleep
 import re
 from logger import Logger
+from typing import NoReturn, typ
 
 
 def main():
+    """The CLI for the program."""
     parser = argparse.ArgumentParser(
         description="Backpack, an easy way to backup a directory."
     )
@@ -25,13 +29,13 @@ def main():
         "-e", help="GPG Email for encryption", metavar="<john@gmail.com>", required=True
     )
     args = parser.parse_args()
-    path = args.p
-    dest = args.d
-    email = args.e
+    path: str = args.p
+    dest: str = args.d
+    email: str = args.e
     backup(path, dest, email)
 
 
-def full_path(p):
+def full_path(p: str) -> str:
     """Expand a relative path and return the absolute path.
 
     Args:
@@ -46,7 +50,7 @@ def full_path(p):
     return p
 
 
-def encrypt(z, e):
+def encrypt(z: str, e: str) -> NoReturn:
     """Encrypts an archive file for a specifid recipient using GPG.
 
     Args:
@@ -62,7 +66,7 @@ def encrypt(z, e):
         cprint(status_msg, "green")
 
 
-def backup_dir(p, d):
+def backup_dir(p: str, d: str) -> str:
     """Create a zipped copy of a directory.
 
     Args:
@@ -83,7 +87,7 @@ def backup_dir(p, d):
     return z
 
 
-def backup(path, dest, email):
+def backup(path: str, dest: str, email: str) -> NoReturn:
 
     # Expand ~/ or ensure absolute path
     orig_dir = full_path(path)
