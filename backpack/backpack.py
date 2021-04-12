@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ A program that will encrypt and archive a file or directory.
+        - Uses GPG 
 """
-from _typeshed import NoneType
 import os
 from distutils.dir_util import copy_tree
 from termcolor import cprint
@@ -11,7 +11,7 @@ import argparse
 from time import sleep
 import re
 from logger import Logger
-from typing import NoReturn, typ
+from typing import NoReturn
 
 
 def main():
@@ -50,7 +50,7 @@ def full_path(p: str) -> str:
     return p
 
 
-def encrypt(z: str, e: str) -> NoReturn:
+def encrypt(z: str, e: str) -> None:
     """Encrypts an archive file for a specifid recipient using GPG.
 
     Args:
