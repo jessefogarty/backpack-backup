@@ -24,15 +24,13 @@ $ SUCCESS! Backup file: /Volumes/EXT/before/tmp.txt.gpg
 ```
 
 ## Todo
-* Updated tests
-    * back up to external device
-* Rich tui setup 
-* Project tidy for package
-* Docker build & test
+* backup success return tuple
+* Basic alpha
+* Docker build & beta test
 
 ## Version
 * v0.0.2 *in development*
-* **v0.0.1 (current)**
+* 0.0.1 (current)
 
 ## Contact
 * e-mail: unkwn1@tuta.io

@@ -10,7 +10,7 @@ import shutil
 import argparse
 from time import sleep
 import re
-from logger import Logger
+from backpack.logger import Logger
 from typing import NoReturn
 
 
@@ -87,7 +87,7 @@ def backup_dir(p: str, d: str) -> str:
     return z
 
 
-def backup(path: str, dest: str, email: str) -> NoReturn:
+def backup(path: str, dest: str, email: str) -> None:
 
     # Expand ~/ or ensure absolute path
     orig_dir = full_path(path)
