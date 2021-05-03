@@ -10,7 +10,7 @@ import argparse
 import re
 
 
-def main():
+def cli():
     """The CLI for the program."""
     parser = argparse.ArgumentParser(
         description="Backpack, an easy way to backup a directory."
@@ -69,8 +69,9 @@ def backup_dir(p: str, d: str) -> str:
         p: str - full path to file or directory to backup.
         d: str - full path to the destination for the backup archive file.
     Returns:
-        # TODO: double check if this is a str or shutil object.
         z: str - full path to backup archive OR archive object.
+
+    - [ ] TODO: double check if this is a str or shutil object.
     """
     # dest_name = name for backup directory
     dest_name = p.split("/")[-1] + "-backup"
@@ -85,12 +86,12 @@ def backup_dir(p: str, d: str) -> str:
 
 def backup(path: str, dest: str, email: str) -> None:
     """Encrypts and backs up a directory to destination.
-    Backed up data is encrypted for the email user provided.\n
+    *Backed up data is encrypted for the email user provided*.
 
     Args:
         path: str - relative path to original data.
         dest: str - relative path to desination directory.
-        email: str - email of GPG recipient.\n
+        email: str - email of GPG recipient.
 
     TODO: Allow file backups.
     """
@@ -130,4 +131,5 @@ def backup(path: str, dest: str, email: str) -> None:
 
 
 # launch cli if called
-main()
+if __name__ == "__main__":
+    cli()
