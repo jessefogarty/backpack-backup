@@ -20,20 +20,20 @@ class Logger:
         # add the handlers to the logger
         self.logger.addHandler(self.handler)
 
-    def info(self, msg):
+    def info(self, msg: str):
         self.logger.info(msg)
 
-    def debug(self, msg):
+    def debug(self, msg: str):
         self.handler.close()
 
-    def warning(self, msg):
+    def warning(self, msg: str):
         self.logger.warning(msg)
 
-    def error(self, msg):
+    def error(self, msg: str):
         self.logger.error(msg, exc_info=True)
 
-    def critical(self, msg):
+    def critical(self, msg: str):
         self.logger.critical(msg)
 
-    def fh_close(self):
+    def fh_close(self) -> None:
         self.handler.close()

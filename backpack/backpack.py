@@ -3,15 +3,11 @@
         - Uses GPG 
 """
 import os
-from distutils.dir_util import copy_tree
 from termcolor import cprint
 import gnupg
 import shutil
 import argparse
-from time import sleep
 import re
-from backpack.logger import Logger
-from typing import NoReturn
 
 
 def main():
@@ -54,9 +50,9 @@ def encrypt(z: str, e: str) -> None:
     """Encrypts an archive file for a specifid recipient using GPG.
 
     Args:
-        z (str): absolute path to zip archive file you want to encrypt.
+        z: str - absolute path to zip archive file you want to encrypt.
     Returns:
-        e (str): absolute path to encrypted zip archive file (.zip.gpg).
+        e: str - absolute path to encrypted zip archive file (.zip.gpg).
     """
     gpg = gnupg.GPG(gnupghome=os.path.expanduser("~/.gnupg"))
     with open(z, mode="rb") as f:
@@ -70,11 +66,11 @@ def backup_dir(p: str, d: str) -> str:
     """Create a zipped copy of a directory.
 
     Args:
-        p (str): full path to file or directory to backup.
-        d (str): full path to the destination for the backup archive file.
+        p: str - full path to file or directory to backup.
+        d: str - full path to the destination for the backup archive file.
     Returns:
         # TODO: double check if this is a str or shutil object.
-        z (str): full path to backup archive OR archive object.
+        z: str - full path to backup archive OR archive object.
     """
     # dest_name = name for backup directory
     dest_name = p.split("/")[-1] + "-backup"
@@ -88,6 +84,16 @@ def backup_dir(p: str, d: str) -> str:
 
 
 def backup(path: str, dest: str, email: str) -> None:
+    """Encrypts and backs up a directory to destination.
+    Backed up data is encrypted for the email user provided.\n
+
+    Args:
+        path: str - relative path to original data.
+        dest: str - relative path to desination directory.
+        email: str - email of GPG recipient.\n
+
+    TODO: Allow file backups.
+    """
 
     # Expand ~/ or ensure absolute path
     orig_dir = full_path(path)
