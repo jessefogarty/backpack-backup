@@ -116,15 +116,13 @@ def backup_dir(p: str, d: str) -&gt; str:
 
 
 def backup(path: str, dest: str, email: str) -&gt; None:
-    &#34;&#34;&#34;Encrypts and backs up a directory to destination.
+    &#34;&#34;&#34;Backup and encrypt a file or directory to a destination.
     *Backed up data is encrypted for the email user provided*.
 
     Args:
         path: str - relative path to original data.
         dest: str - relative path to desination directory.
         email: str - email of GPG recipient.
-
-    TODO: Allow file backups.
     &#34;&#34;&#34;
 
     # Expand ~/ or ensure absolute path
@@ -177,7 +175,7 @@ if __name__ == &#34;__main__&#34;:
 <span>def <span class="ident">backup</span></span>(<span>path: str, dest: str, email: str) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Encrypts and backs up a directory to destination.
+<div class="desc"><p>Backup and encrypt a file or directory to a destination.
 <em>Backed up data is encrypted for the email user provided</em>.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -187,22 +185,19 @@ if __name__ == &#34;__main__&#34;:
 <dd>str - relative path to desination directory.</dd>
 <dt><strong><code>email</code></strong></dt>
 <dd>str - email of GPG recipient.</dd>
-</dl>
-<p>TODO: Allow file backups.</p></div>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def backup(path: str, dest: str, email: str) -&gt; None:
-    &#34;&#34;&#34;Encrypts and backs up a directory to destination.
+    &#34;&#34;&#34;Backup and encrypt a file or directory to a destination.
     *Backed up data is encrypted for the email user provided*.
 
     Args:
         path: str - relative path to original data.
         dest: str - relative path to desination directory.
         email: str - email of GPG recipient.
-
-    TODO: Allow file backups.
     &#34;&#34;&#34;
 
     # Expand ~/ or ensure absolute path
