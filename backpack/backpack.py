@@ -8,6 +8,7 @@ import gnupg
 import shutil
 import argparse
 import re
+import sys
 
 
 def cli():
@@ -54,6 +55,22 @@ def encrypt(z: str, e: str) -> None:
     Returns:
         e: str - absolute path to encrypted zip archive file (.zip.gpg).
     """
+
+    # See if default location exists (assuming the key is too)
+    # if NOT found ask to create
+    if os.path.exists(os.path.expanduser("~/.gnupg")) is False:
+        cprint("ERROR! No '~/.gnupg' directory found.", "red")
+        _new: str = input("Create a new key and default directory? [y/N]").upper()
+        if _new == "Y":
+            name: str
+            email: str
+            key_lengh = 4096
+            comment: str
+        # if N or any other input exit
+        else:
+            sys.exit()
+
+    # Begin encryption of data
     gpg = gnupg.GPG(gnupghome=os.path.expanduser("~/.gnupg"))
     with open(z, mode="rb") as f:
         # output = [file_name].gpg
@@ -70,8 +87,6 @@ def backup_dir(p: str, d: str) -> str:
         d: str - full path to the destination for the backup archive file.
     Returns:
         z: str - full path to backup archive OR archive object.
-
-    - [ ] TODO: double check if this is a str or shutil object.
     """
     # dest_name = name for backup directory
     dest_name = p.split("/")[-1] + "-backup"
