@@ -85,15 +85,13 @@ def backup_dir(p: str, d: str) -> str:
 
 
 def backup(path: str, dest: str, email: str) -> None:
-    """Encrypts and backs up a directory to destination.
+    """Backup and encrypt a file or directory to a destination.
     *Backed up data is encrypted for the email user provided*.
 
     Args:
         path: str - relative path to original data.
         dest: str - relative path to desination directory.
         email: str - email of GPG recipient.
-
-    TODO: Allow file backups.
     """
 
     # Expand ~/ or ensure absolute path
