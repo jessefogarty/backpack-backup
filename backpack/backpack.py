@@ -3,6 +3,7 @@
         - Uses GPG 
 """
 import os
+from typing import Dict, Tuple
 from termcolor import cprint
 import gnupg
 import shutil
@@ -60,12 +61,13 @@ def encrypt(z: str, e: str) -> None:
     # if NOT found ask to create
     if os.path.exists(os.path.expanduser("~/.gnupg")) is False:
         cprint("ERROR! No '~/.gnupg' directory found.", "red")
-        _new: str = input("Create a new key and default directory? [y/N]").upper()
+        _new: str = input("Create a new key and default directory? [y/N]: ").upper()
         if _new == "Y":
-            name: str
-            email: str
-            key_lengh = 4096
-            comment: str
+            name: str = input("Enter your full name: ").capitalize()
+            email: str = input("Enter your email address: ").lower()
+            key_lengh: int = 4096
+            comment: str = input("Enter a comment: ").lower()
+            password: str = input("Enter a passphrase: ")
         # if N or any other input exit
         else:
             sys.exit()
@@ -78,6 +80,35 @@ def encrypt(z: str, e: str) -> None:
         status_msg = f"{z}: {status.status}"
         cprint(status_msg, "green")
 
+
+def new_key(**kwargs: str) -> Dict:
+    """ Creates a new GPG key.
+    
+    Args:
+        name = str
+        email = str
+        password = str
+    """
+    key_default: Dict = {
+       "name": "Backpack Backup",
+       "email": "backpack@unkwn1.dev",
+       "key_type": "RSA",
+       "key_length": 4096,
+       "comment": "default generated GPG key by Backpack Backup",
+       "password": ("no_protection", False)
+   }
+
+   # If 3 args provided merge dicts
+    if len(kwargs) > 0:
+        if "name" and "email" and "password" in kwargs:
+            key_default |= kwargs
+    
+    gpg = gnupg.GPG()
+
+    key_data = gpg.gen_key_input(**key_default)
+
+    # No args or not 3 required -> use default
+    return key_default
 
 def backup_dir(p: str, d: str) -> str:
     """Create a zipped copy of a directory.
@@ -130,6 +161,7 @@ def backup(path: str, dest: str, email: str) -> None:
         print(f'SUCCESS! Backup File: {dest+"/"+z+".gpg"}')
         os.remove(z)
 
+    # File backup if no dir found
     elif os.path.exists(orig_dir):
         dir_path = os.path.dirname(orig_dir)
         fname = orig_dir.split("/")[-1]
