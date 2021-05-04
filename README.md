@@ -2,37 +2,62 @@ Backpack.py - Encrypted Backups Made Easy.
 ======
 ![](https://img.shields.io/pypi/pyversions/3.svg?style=flat-square)
 
-> **backpack.py** is a python3 script used to make quick encrypted backups of a folder or directory.
+> **backpack.py** is a python3 module used to encrypt and backup a directory or file for a specified GPG address. It can be run on it's own as a shell script or imported as a python module.
 
 Example usage as follows below:
 
+**Used as a console script**
+
 ```python
-$ python3 backpack.py -p ~/Documents/test -d /Volumes/EXT -e jessefogarty@tuta.io
+$ backpack -p ~/Documents/test -d /Volumes/EXT -e jessefogarty@tuta.io
 # Output
 $ before-backup.zip: encryption ok
 $ SUCCESS! Backup File: /Volumes/EXT/before-backup.zip.gpg
 ```
 
+**Imported backup python function**
 ```python
-$ python3 -p ~/Documents/test1.txt -d /Volumes/EXT -e jessefogarty@tuta.io
-# Output
-$ Encrypting and moving File: tmp.txt
-$ tmp.txt: encryption ok
-$ SUCCESS! Backup file: /Volumes/EXT/before/tmp.txt.gpg
+from backpack.backpack import backup
+
+backup(p, d, e)
 ```
 
+## Installation Methods
+
+*Note*: It's important you have they GPG key you want to encrypt your data for already installed to `~/.gnupg`. Later versions will offer to generate if not found. 
+* Or, potentially forgo GPG for a dynamic keypair ¯\\_(ツ)_/¯
+
+**Pip**
+```sh
+pip install Backpack-Backup
+```
+
+**Source**
+```sh
+git clone https://github.com/jessefogarty/backpack-backup.git
+cd backpack-backup
+python3 setup.py install
+```
+
+**Source 2**
+```sh
+git clone https://github.com/jessefogarty/backpack-backup.git
+cd backpack-backup
+python3 -m pip install -r requirements.txt
+python3 -m backpack
+```
+
+
 ## Requirements
-* todo
-* todo
-* todo
-* todo
+* Python 3
+* GnuPG
+    * GPG key created [(How To)](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key)
 
 ## Version
-* Version 1.5 (in development)
-* **Version 1.0 (current)**
+
+* 0.0.2 **Current** *(Alpha)*
+    * 0.0.2-1 *(development)*
 
 ## Contact
 * e-mail: jessefogarty@tuta.io
 * Twitter: [@twitterhandle](https://twitter.com/jessefogarty "twitterhandle on twitter")
-
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=jessefogarty&url=https://github.com/jessefogarty/sw-name&title=sw-name&language=&tags=github&category=software)
